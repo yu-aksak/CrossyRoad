@@ -11,24 +11,28 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private Transform spawnPos;
     [SerializeField] private float minTime;
     [SerializeField] private float maxTime;
-    [SerializeField] private bool rotation;
+    public bool rotation;
+    private Pool pool;
+    public string name_;
     private void Start()
     {
-        StartCoroutine(SpawnCar());
-        
+        pool = GameObject.Find(name_).GetComponent<Pool>();
+        StartCoroutine(SpawnObject());
     }
 
-    private IEnumerator SpawnCar()
+    private IEnumerator SpawnObject()
     {
         while (true)
         {
-
-            yield return new WaitForSeconds(Random.Range(minTime, maxTime));
-            GameObject obj = Instantiate(_object, spawnPos.position, Quaternion.identity);
+            GameObject obj = pool.GetObject();
+            obj.SetActive(true);
+            obj.transform.position = new Vector3(spawnPos.position.x, spawnPos.position.y, spawnPos.position.z + Random.Range(-2, 2));
+            //GameObject obj = Instantiate(_object, spawnPos.position, Quaternion.identity);
             if (!rotation)
             {
                 obj.transform.Rotate(new Vector3(0, 180, 0));
             }
+            yield return new WaitForSeconds(Random.Range(minTime, maxTime));
         }
     }
 }

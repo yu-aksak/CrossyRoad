@@ -6,28 +6,50 @@ using UnityEngine.UI;
 
 public class MoveCamera : MonoBehaviour
 {
-
- 
     [SerializeField] private GameObject player;
     public float cameraFollowSpeed;
-    public float offset; 
-    public bool isSmoothFollow = true;
+    public Vector3 offset;
+    private Camera _camera;
+    private Vector3 prevPosPlayer = new Vector3(0,0,0);
+    private Rigidbody rb;
+ 
+    
+    private void Start()
+    {
+        offset = transform.position - player.transform.position;
+        rb = GetComponent<Rigidbody>();
+    }
 
     void Update ()
     {
-        if (player)
+        if (player.activeInHierarchy)
         {
-            Vector3 newCameraPosition = transform.position;
-            newCameraPosition.x = player.transform.position.x * cameraFollowSpeed;
-            newCameraPosition.z = player.transform.position.z - offset;
- 
-            if (!isSmoothFollow)
+            rb.velocity = new Vector3(cameraFollowSpeed, 0, 0);
+
+            var position1 = transform.position;
+            Vector3 newCameraPosition = position1;
+            var position = player.transform.position;
+            if (prevPosPlayer.x <= position.x)
             {
-                transform.position = newCameraPosition;
+                newCameraPosition.z = position.z + offset.z;
+                if (transform.position.x + 5 > player.transform.position.x)
+                {
+                    transform.position = position1;
+                    prevPosPlayer = position;
+                }
+                else
+                {
+                    newCameraPosition.x = position.x + offset.x;
+                    position1 = Vector3.Lerp(position1, newCameraPosition,
+                        Time.deltaTime);
+                    transform.position = position1;
+                    prevPosPlayer = position;
+                }
             }
-            else
+            if (transform.position.x - 1 > player.transform.position.x)
             {
-                transform.position = Vector3.Lerp(transform.position, newCameraPosition, cameraFollowSpeed * Time.deltaTime);
+                MovePlayer.isAlive = false;
             }
         }
-    }}
+    }
+}

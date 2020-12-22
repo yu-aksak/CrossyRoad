@@ -7,25 +7,18 @@ using Random = UnityEngine.Random;
 
 public class CoinSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject coin;
-
+    private Pool pool;
     private void Start()
     {
-        StartCoroutine(SpawnCar());
-
+        pool = GameObject.Find("PoolCoins").GetComponent<Pool>();
+        SpawnCoin();
     }
-
-    private IEnumerator SpawnCar()
+    private void SpawnCoin()
     {
         float posX = transform.position.x;
-
         float posZ = Random.Range(-5, 5);
-        while (true)
-        {
-
-            yield return new WaitForSeconds(4);
-            GameObject obj = Instantiate(coin, new Vector3(posX, 1, posZ), Quaternion.identity);
-
-        }
+        GameObject obj = pool.GetObject();
+        obj.SetActive(true);
+        obj.transform.position = new Vector3(posX, 1, posZ);
     }
 }

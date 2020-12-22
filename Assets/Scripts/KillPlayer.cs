@@ -5,11 +5,11 @@ using UnityEngine.Serialization;
 
 public class KillPlayer : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.collider.GetComponent<Player>() != null)
+        if (other.GetComponent<MovePlayer>() != null)
         {
-            Player.isAlive = false;
+            MovePlayer.isAlive = false;
         }
     }
 }

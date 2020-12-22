@@ -7,16 +7,30 @@ using UnityEngine.UI;
 public class PickCoin : MonoBehaviour
 {
     [SerializeField] private AudioClip coinCollectSound;
+    [SerializeField] GameObject player;
+    private GameObject _gameObject;
 
     private void Start()
     {
-        Destroy(gameObject,4);
+        _gameObject = GameObject.Find("Player");
+    }
+
+    private void FixedUpdate()
+    {
+        player = _gameObject;
+        if (gameObject.activeInHierarchy)
+        {
+            if (player.transform.position.x - transform.position.x > 7)
+            {
+                gameObject.SetActive(false);
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         AudioSource.PlayClipAtPoint(coinCollectSound, transform.position);
-        Player._coins++;
-        Destroy(gameObject);
+        MovePlayer._coins++;
+        gameObject.SetActive(false);
     }
 }

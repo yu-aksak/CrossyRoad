@@ -6,7 +6,7 @@ using UnityEngine;
 public class TerrainGeneration : MonoBehaviour
 {
     private Vector3 _position = new Vector3(-7, 0, 0);
-    [SerializeField] private int maxCount;
+    public static int maxCount = 50;
     [SerializeField] private int minDinsatnce;
     [SerializeField] private List<TerrainData> terrainDatas = new List<TerrainData>();
     private List<GameObject> currentTerrains = new List<GameObject>();
@@ -47,7 +47,6 @@ public class TerrainGeneration : MonoBehaviour
                 _position.x++;
             }
         }
-
     }
 }
 
